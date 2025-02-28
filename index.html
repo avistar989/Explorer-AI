@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Explorer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Welcome to AI Explorer</h1>
+    
+    <label for="mode">Mode:</label>
+    <select id="mode" onchange="toggleMode()">
+        <option value="active">Active (Camera & Voice)</option>
+        <option value="inactive">Inactive (Text Only)</option>
+    </select>
+
+    <div id="textInput">
+        <input type="text" id="userInput" placeholder="Type here...">
+        <button onclick="processInput()">Ask</button>
+    </div>
+
+    <div id="voiceInput">
+        <button onclick="startListening()">🎤 Speak</button>
+    </div>
+
+    <div id="cameraInput">
+        <input type="file" accept="image/*" id="uploadImage" onchange="processImage()">
+        <p>Or open camera:</p>
+        <button onclick="openCamera()">📷 Capture</button>
+    </div>
+
+    <p id="response"></p>
+
+    <script src="script.js"></script>
+</body>
+</html>
