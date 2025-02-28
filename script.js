@@ -16,11 +16,28 @@ function processInput() {
     let input = document.getElementById("userInput").value;
     let responseBox = document.getElementById("response");
 
-    if (input.toLowerCase().includes("hello")) {
-        responseBox.innerHTML = "Hi there! Welcome to AI Explorer.";
-    } else {
-        responseBox.innerHTML = "I'm analyzing your input...";
+    if (!input.trim()) {
+        responseBox.innerHTML = "Please enter a message.";
+        return;
     }
+
+    responseBox.innerHTML = "Processing...";
+
+    fetch("https://explorer-ai.onrender.com/api/process", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ text: input })
+    })
+    .then(response => response.json())
+    .then(data => {
+        responseBox.innerHTML = data.reply || "No response from AI.";
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        responseBox.innerHTML = "Error processing request.";
+    });
 }
 
 function startListening() {
@@ -30,6 +47,10 @@ function startListening() {
         let speech = event.results[0][0].transcript;
         document.getElementById("userInput").value = speech;
         processInput();
+    };
+
+    recognition.onerror = function(event) {
+        console.error("Voice recognition error:", event.error);
     };
 
     recognition.start();
@@ -43,7 +64,26 @@ function processImage() {
     let file = document.getElementById("uploadImage").files[0];
     let responseBox = document.getElementById("response");
 
-    if (file) {
-        responseBox.innerHTML = "Image uploaded! AI processing coming soon...";
+    if (!file) {
+        responseBox.innerHTML = "Please select an image.";
+        return;
     }
-}
+
+    let formData = new FormData();
+    formData.append("image", file);
+
+    responseBox.innerHTML = "Uploading image...";
+
+    fetch("https://explorer-ai.onrender.com/api/upload", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        responseBox.innerHTML = data.reply || "Image processed, but no response from AI.";
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        responseBox.innerHTML = "Error processing image.";
+    });
+                      }
